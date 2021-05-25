@@ -1,7 +1,17 @@
-import React from "react";
+import { useState } from "react";
 import { BiSearch, BiCaretDown, BiCheck } from "react-icons/bi";
 
-const DropDown = () => {
+const DropDown = ({
+  toggle,
+  onQueryChange,
+  sortBy,
+  onSortByChange,
+  orderBy,
+  onOrderByChange,
+}) => {
+  if (!toggle) {
+    return null;
+  }
   return (
     <div
       className="origin-top-right absolute right-0 mt-2 w-56
@@ -14,41 +24,54 @@ const DropDown = () => {
         aria-labelledby="options-menu"
       >
         <div
+          onClick={() => onSortByChange("petName")}
           className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex justify-between cursor-pointer"
           role="menuitem"
         >
-          Pet Name <BiCheck />
+          Pet Name {sortBy === "petName" && <BiCheck />}
         </div>
         <div
+          onClick={() => onSortByChange("ownerName")}
           className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex justify-between cursor-pointer"
           role="menuitem"
         >
-          Owner Name <BiCheck />
+          Owner Name {sortBy === "ownerName" && <BiCheck />}
         </div>
         <div
+          onClick={() => onSortByChange("aptDate")}
           className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex justify-between cursor-pointer"
           role="menuitem"
         >
-          Date <BiCheck />
+          Date {sortBy === "aptDate" && <BiCheck />}
         </div>
         <div
+          onClick={() => onOrderByChange("asc")}
           className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex justify-between cursor-pointer border-gray-1 border-t-2"
           role="menuitem"
         >
-          Asc <BiCheck />
+          Asc {orderBy === "asc" && <BiCheck />}
         </div>
         <div
+          onClick={() => onOrderByChange("desc")}
           className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex justify-between cursor-pointer"
           role="menuitem"
         >
-          Desc <BiCheck />
+          Desc {orderBy === "desc" && <BiCheck />}
         </div>
       </div>
     </div>
   );
 };
 
-const Search = () => {
+const Search = ({
+  query,
+  onQueryChange,
+  sortBy,
+  onSortByChange,
+  orderBy,
+  onOrderByChange,
+}) => {
+  let [toggleSort, setToggleSort] = useState(false);
   return (
     <div className="py-5">
       <div className="mt-1 relative rounded-md shadow-sm">
@@ -60,7 +83,10 @@ const Search = () => {
           type="text"
           name="query"
           id="query"
-          value=""
+          value={query}
+          onChange={(e) => {
+            onQueryChange(e.target.value);
+          }}
           className="pl-8 rounded-md focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300"
           placeholder="Search"
         />
@@ -72,10 +98,19 @@ const Search = () => {
               id="options-menu"
               aria-haspopup="true"
               aria-expanded="true"
+              onClick={() => {
+                setToggleSort(!toggleSort);
+              }}
             >
               Sort By <BiCaretDown className="ml-2" />
             </button>
-            <DropDown />
+            <DropDown
+              sortBy={sortBy}
+              onSortByChange={(mySort) => onSortByChange(mySort)}
+              orderBy={orderBy}
+              onOrderByChange={(myOrder) => onOrderByChange(myOrder)}
+              toggle={toggleSort}
+            />
           </div>
         </div>
       </div>
